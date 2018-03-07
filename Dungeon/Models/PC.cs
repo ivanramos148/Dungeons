@@ -413,7 +413,18 @@ namespace Dungeon.Models
         {
             conn.Dispose();
         }
-    return items;
+
+        public bool HasLight()
+        {
+          List<Item> tempList = this.GetInventory();
+          bool HasLightSource = false;
+          //if inventory contains a light source...
+          // HasLightSource = true;
+          return HasLightSource;
+        }
+
+
+
     }
   }
 }
