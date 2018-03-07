@@ -413,6 +413,8 @@ namespace Dungeon.Models
         {
             conn.Dispose();
         }
+        return items;
+      }
 
         public bool HasLight()
         {
@@ -427,4 +429,3 @@ namespace Dungeon.Models
 
     }
   }
-}

@@ -55,17 +55,7 @@ namespace Dungeon.Models
     }
 
 
-    public static Dictionary<int, int[]> GetMap()
-    {
-        Dictionary <int, int[]> map = new Dictionary <int, int[]>();
-        //             {N,NE,E,SE,S,SW,W,NW,U,D,H});
-        map.Add(1,new[]{0,0,0,0,2,0,0,0,0,0,0});
-        map.Add(2,new[]{1,0,4,0,3,0,5,0,0,0,0});
-        map.Add(3,new[]{2,0,4,0,0,0,5,0,0,0,0});
-        map.Add(4,new[]{0,0,0,0,3,0,2,0,0,0,0});
-        map.Add(5,new[]{0,0,2,0,3,0,0,0,0,0,0});
-        return map;
-    }
+
 
     public static List<NPC> GetAllNPCs(int Id)
     {
@@ -105,55 +95,8 @@ namespace Dungeon.Models
 
     public static List<Item> GetAllItems(int Id)
     {
-        List<Item> allItems = new List<Item> {};
-        MySqlConnection conn = DB.Connection();
-        conn.Open();
-        var cmd = conn.CreateCommand() as MySqlCommand;
-
-        MySqlParameter roomId = new MySqlParameter();
-        roomId.ParameterName = "@roomId";
-        roomId.Value = Id;
-        cmd.Parameters.Add(roomId);
-
-        cmd.CommandText = @"SELECT * FROM contents WHERE id = @roomId;";
-        var rdr = cmd.ExecuteReader() as MySqlDataReader;
 
 
-        public static Dictionary<int, int[]> GetMap()
-        {
-            Dictionary <int, int[]> map = new Dictionary <int, int[]>();
-            //             {N,NE,E,SE,S,SW,W,NW,U,D,H});
-            map.Add(1,new[]{0,0,0,0,2,0,0,0,0,0,0});
-            map.Add(2,new[]{1,0,4,0,3,0,5,0,0,0,0});
-            map.Add(3,new[]{2,0,4,0,6,0,5,0,0,0,0});
-            map.Add(4,new[]{0,0,0,0,3,0,2,0,0,0,0});
-            map.Add(5,new[]{0,0,2,0,3,0,0,0,0,0,0});
-
-            map.Add(6,new[]{3,0,7,0,0,0,8,0,0,0,0});
-
-            map.Add(7,new[]{0,0,0,0,0,0,6,0,0,0,0});
-
-            map.Add(8,new[]{0,0,0,0,0,0,6,0,9,0,0}); // up to attic
-            map.Add(9,new[]{0,0,0,0,0,0,0,0,0,8,10}); // down from attic and also to hidden room
-            map.Add(10,new[]{0,0,0,0,0,0,0,0,0,0,9}); // back from hidden but have to make sure that it is also visible when you unhide room #9
-
-            return map;
-        }
-
-        public static List<NPC> GetAllNPCs(int Id)
-        {
-          int itemId = rdr.GetInt32(0);
-
-          // string itemName = rdr.GetString(1);
-          // string itemType = rdr.GetString(2);
-          // string itemSpecial = rdr.GetString(3);
-          // bool itemMagic = rdr.GetBoolean(4);
-          Item newItem = Item.Find(itemId);
-          allItems.Add(newItem);
-        }
-        conn.Close();
-        if (conn != null)
-        {
             List<Item> allItems = new List<Item> {};
             MySqlConnection conn = DB.Connection();
             conn.Open();
@@ -188,7 +131,31 @@ namespace Dungeon.Models
             }
             return allItems;
         }
-        return allItems;
+
+
+
+        public static Dictionary<int, int[]> GetMap()
+        {
+            Dictionary <int, int[]> map = new Dictionary <int, int[]>();
+            //             {N,NE,E,SE,S,SW,W,NW,U,D,H});
+            map.Add(1,new[]{0,0,0,0,2,0,0,0,0,0,0});
+            map.Add(2,new[]{1,0,4,0,3,0,5,0,0,0,0});
+            map.Add(3,new[]{2,0,4,0,6,0,5,0,0,0,0});
+            map.Add(4,new[]{0,0,0,0,3,0,2,0,0,0,0});
+            map.Add(5,new[]{0,0,2,0,3,0,0,0,0,0,0});
+
+            map.Add(6,new[]{3,0,7,0,0,0,8,0,0,0,0});
+
+            map.Add(7,new[]{0,0,0,0,0,0,6,0,0,0,0});
+
+            map.Add(8,new[]{0,0,0,0,0,0,6,0,9,0,0}); // up to attic
+            map.Add(9,new[]{0,0,0,0,0,0,0,0,0,8,10}); // down from attic and also to hidden room
+            map.Add(10,new[]{0,0,0,0,0,0,0,0,0,0,9}); // back from hidden but have to make sure that it is also visible when you unhide room #9
+
+            return map;
+        }
+
+
+
     }
   }
-}

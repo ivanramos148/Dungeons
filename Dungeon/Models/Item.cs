@@ -231,25 +231,7 @@ namespace Dungeon.Models
 
     public void AddToContents(int roomId)
     {
-        MySqlConnection conn = DB.Connection();
-        conn.Open();
-        Console.WriteLine("In Item.cs AddToContents has a room Id of " + roomId);
-        MySqlCommand cmd = new MySqlCommand(@"INSERT INTO contents (rooms, items) VALUES (@RoomId, @ItemId);", conn);
 
-        MySqlParameter itemIdParameter = new MySqlParameter();
-        itemIdParameter.ParameterName = "@ItemId";
-        itemIdParameter.Value = _id;
-
-        MySqlParameter roomIdParameter = new MySqlParameter();
-        roomIdParameter.ParameterName = "@RoomId";
-        roomIdParameter.Value = roomId;
-
-        Console.WriteLine("@ItemId is: " + _id + " and roomId is: " + roomId);
-
-        cmd.Parameters.Add(itemIdParameter);
-
-        try
-        {
             MySqlConnection conn = DB.Connection();
             conn.Open();
             Console.WriteLine("In Item.cs AddToContents has a room Id of " + roomId);
@@ -287,65 +269,55 @@ namespace Dungeon.Models
 
         }
 
-        public void RemoveFromContents(int roomId)
-        {
-            MySqlConnection conn = DB.Connection();
-            conn.Open();
-            Console.WriteLine("In Item.cs RemoveFromContents has a room Id of " + roomId);
-            MySqlCommand cmd = new MySqlCommand(@"DELETE FROM contents (rooms, items) VALUES (@RoomId, @ItemId);", conn);
-
-            MySqlParameter roomIdParameter = new MySqlParameter();
-            roomIdParameter.ParameterName = "@RoomId";
-            roomIdParameter.Value = roomId;
-
-            cmd.Parameters.Add(roomIdParameter);
-
-            MySqlParameter itemIdParameter = new MySqlParameter();
-            itemIdParameter.ParameterName = "@ItemId";
-            itemIdParameter.Value = _id;
-
-            cmd.Parameters.Add(itemIdParameter);
-
-            Console.WriteLine("@ItemId is: " + _id + " and roomId is: " + roomId);
-
-
-            try
-            {
-                cmd.ExecuteNonQuery();
-            }
-            catch(Exception ex)
-            {
-               Console.WriteLine("Exception in AddToContents is: " + ex + " and roomId is: " + roomId);
-            }
-
-
-            if (conn != null)
-            {
-                conn.Close();
-            }
-
-        }
-
-
-        public void Delete()
-        {
-           Console.WriteLine("Exception in AddToContents is: " + ex + " and roomId is: " + roomId);
-        }
+        // public void RemoveFromContents(int roomId)
+        // {
+        //     MySqlConnection conn = DB.Connection();
+        //     conn.Open();
+        //     Console.WriteLine("In Item.cs RemoveFromContents has a room Id of " + roomId);
+        //     MySqlCommand cmd = new MySqlCommand(@"DELETE FROM contents (rooms, items) VALUES (@RoomId, @ItemId);", conn);
+        //
+        //     MySqlParameter roomIdParameter = new MySqlParameter();
+        //     roomIdParameter.ParameterName = "@RoomId";
+        //     roomIdParameter.Value = roomId;
+        //
+        //     cmd.Parameters.Add(roomIdParameter);
+        //
+        //     MySqlParameter itemIdParameter = new MySqlParameter();
+        //     itemIdParameter.ParameterName = "@ItemId";
+        //     itemIdParameter.Value = _id;
+        //
+        //     cmd.Parameters.Add(itemIdParameter);
+        //
+        //     Console.WriteLine("@ItemId is: " + _id + " and roomId is: " + roomId);
+        //
+        //
+        //     try
+        //     {
+        //         cmd.ExecuteNonQuery();
+        //     }
+        //     catch(Exception ex)
+        //     {
+        //        Console.WriteLine("Exception in AddToContents is: " + ex + " and roomId is: " + roomId);
+        //     }
+        //
+        //
+        //     if (conn != null)
+        //     {
+        //         conn.Close();
+        //     }
+        //
+        // }
 
 
-        if (conn != null)
-        {
-            conn.Close();
-        }
 
-    }
+    // }
 
     public void RemoveFromContents(int roomId)
     {
       MySqlConnection conn = DB.Connection();
       conn.Open();
       Console.WriteLine("In Item.cs AddToContents has a room Id of " + roomId);
-      MySqlCommand cmd = new MySqlCommand(@"DELETE FROM contents WHERE @ItemId = @thisId;", conn);
+      MySqlCommand cmd = new MySqlCommand(@"DELETE FROM contents WHERE items = @ItemId;", conn);
 
       MySqlParameter itemIdParameter = new MySqlParameter();
       itemIdParameter.ParameterName = "@ItemId";
