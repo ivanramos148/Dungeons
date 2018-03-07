@@ -298,5 +298,43 @@ namespace Dungeon.Models
                 conn.Dispose();
             }
         }
+
+        public List<Item> GetExamine()
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"SELECT * FROM examine WHERE id = @itemId;";
+            MySqlParameter pcIdParameter = new MySqlParameter();
+            pcIdParameter.ParameterName = "@itemId";
+            pcIdParameter.Value = _id;
+            cmd.Parameters.Add(pcIdParameter);
+
+            MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+            List<Item> items = new List<Item>{};
+
+            while(rdr.Read())
+            {
+              int itemId = rdr.GetInt32(0);
+              // int pcId = rdr.GetInt32(1);
+
+              // string itemName = rdr.GetString(1);
+              // string itemType = rdr.GetString(2);
+              // string itemSpecial = rdr.GetString(3);
+              // bool itemMagic = rdr.GetBoolean(4);
+              // Item newItem = Item.Find(itemId);
+              // items.Add(newItem);
+              Item newItem = Item.Find(itemId);
+              items.Add(newItem);
+              Console.WriteLine("item is: "  + newItem.GetName());
+            }
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+        return items;
+        }
+
     }
 }

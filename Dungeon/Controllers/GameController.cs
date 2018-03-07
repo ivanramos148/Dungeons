@@ -8,9 +8,6 @@ namespace Dungeon.Controllers
 {
   public class GameController : Controller
   {
-    [HttpGet("/game")]
-    public ActionResult Index()
-    {
         [HttpGet("/game")]
         public ActionResult Index()
         {
@@ -86,14 +83,8 @@ namespace Dungeon.Controllers
           return View("Look", myGame);
         }
 
-      myGame.Add("command", Room.Find(newPC.GetRoomId()).GetCommands());
-
-      myMap = Game.GetMap();
-      myGame.Add("map", myMap);
 
 
-      return View("GameIndex", myGame);
-    }
     //
     // [HttpGet("/game/room/{roomId}")]
     // public ActionResult Move(int roomId)
@@ -147,45 +138,45 @@ namespace Dungeon.Controllers
     //   return View("GameIndex", myGame);
     // }
 
-    [HttpGet("/game/room/{roomId}")]
-    public ActionResult Move(int roomId)
-    {
-
-      PC newPC = PC.Find(2);
-      newPC.SetRoomId(roomId);
-      Dictionary<int, int[]> myMap = new Dictionary<int, int[]>{};
-      Dictionary<string, object> myGame = new Dictionary<string, object>{{"room", Room.Find(newPC.GetRoomId()) }};
-      //           Dictionary<string, object> myGame = new Dictionary<string, object>{"room", Room.Find(PC.GetRoomId()) };
-      myGame.Add("pc", PC.Find(newPC.GetId()));
-      myGame.Add("npc", Game.GetAllNPCs(newPC.GetRoomId()));
-      myGame.Add("item", Game.GetAllItems(newPC.GetRoomId()));
-
-      myGame.Add("command", Room.Find(newPC.GetRoomId()).GetCommands());
-
-      myMap = Game.GetMap();
-      myGame.Add("map", myMap);
-      return View("GameIndex", myGame);
-    }
-
-    [HttpGet("/game/look/{roomId}")]
-    public ActionResult Look(int roomId)
-    {
-
-      PC newPC = PC.Find(2);
-      newPC.SetRoomId(roomId);
-      Dictionary<int, int[]> myMap = new Dictionary<int, int[]>{};
-      Dictionary<string, object> myGame = new Dictionary<string, object>{{"room", Room.Find(newPC.GetRoomId()) }};
-      //           Dictionary<string, object> myGame = new Dictionary<string, object>{"room", Room.Find(PC.GetRoomId()) };
-      myGame.Add("pc", PC.Find(newPC.GetId()));
-      myGame.Add("npc", Game.GetAllNPCs(newPC.GetRoomId()));
-      myGame.Add("item", Game.GetAllItems(newPC.GetRoomId()));
-
-      myGame.Add("command", Room.Find(newPC.GetRoomId()).GetCommands());
-
-      myMap = Game.GetMap();
-      myGame.Add("map", myMap);
-      return View("Look", myGame);
-    }
+    // [HttpGet("/game/room/{roomId}")]
+    // public ActionResult Move(int roomId)
+    // {
+    //
+    //   PC newPC = PC.Find(2);
+    //   newPC.SetRoomId(roomId);
+    //   Dictionary<int, int[]> myMap = new Dictionary<int, int[]>{};
+    //   Dictionary<string, object> myGame = new Dictionary<string, object>{{"room", Room.Find(newPC.GetRoomId()) }};
+    //   //           Dictionary<string, object> myGame = new Dictionary<string, object>{"room", Room.Find(PC.GetRoomId()) };
+    //   myGame.Add("pc", PC.Find(newPC.GetId()));
+    //   myGame.Add("npc", Game.GetAllNPCs(newPC.GetRoomId()));
+    //   myGame.Add("item", Game.GetAllItems(newPC.GetRoomId()));
+    //
+    //   myGame.Add("command", Room.Find(newPC.GetRoomId()).GetCommands());
+    //
+    //   myMap = Game.GetMap();
+    //   myGame.Add("map", myMap);
+    //   return View("GameIndex", myGame);
+    // }
+    //
+    // [HttpGet("/game/look/{roomId}")]
+    // public ActionResult Look(int roomId)
+    // {
+    //
+    //   PC newPC = PC.Find(2);
+    //   newPC.SetRoomId(roomId);
+    //   Dictionary<int, int[]> myMap = new Dictionary<int, int[]>{};
+    //   Dictionary<string, object> myGame = new Dictionary<string, object>{{"room", Room.Find(newPC.GetRoomId()) }};
+    //   //           Dictionary<string, object> myGame = new Dictionary<string, object>{"room", Room.Find(PC.GetRoomId()) };
+    //   myGame.Add("pc", PC.Find(newPC.GetId()));
+    //   myGame.Add("npc", Game.GetAllNPCs(newPC.GetRoomId()));
+    //   myGame.Add("item", Game.GetAllItems(newPC.GetRoomId()));
+    //
+    //   myGame.Add("command", Room.Find(newPC.GetRoomId()).GetCommands());
+    //
+    //   myMap = Game.GetMap();
+    //   myGame.Add("map", myMap);
+    //   return View("Look", myGame);
+    // }
 
     [HttpGet("/game/inventory/{pcId}")]
     public ActionResult Inventory(int pcId)
@@ -230,6 +221,30 @@ namespace Dungeon.Controllers
       myGame.Add("stuff", tempItems);
 
       return View("Select", myGame);
+    }
+
+    [HttpGet("/game/examine/{roomId}")]
+    public ActionResult Examine(int roomId)
+    {
+
+      PC newPC = PC.Find(2);
+      newPC.SetRoomId(roomId);
+      Dictionary<int, int[]> myMap = new Dictionary<int, int[]>{};
+      Dictionary<string, object> myGame = new Dictionary<string, object>{{"room", Room.Find(newPC.GetRoomId()) }};
+      //           Dictionary<string, object> myGame = new Dictionary<string, object>{"room", Room.Find(PC.GetRoomId()) };
+      myGame.Add("pc", PC.Find(newPC.GetId()));
+      myGame.Add("npc", Game.GetAllNPCs(newPC.GetRoomId()));
+      myGame.Add("item", Game.GetAllItems(newPC.GetRoomId()));
+
+      myGame.Add("command", Room.Find(newPC.GetRoomId()).GetCommands());
+
+      myMap = Game.GetMap();
+      myGame.Add("map", myMap);
+
+      Console.WriteLine("Room inside Look is: " + Room.Find(newPC.GetRoomId()).GetName());
+      Console.WriteLine("in Look PC thinks its room # is: " + newPC.GetRoomId());
+
+      return View("Examine", myGame);
     }
   }
 }
