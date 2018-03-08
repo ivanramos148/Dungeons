@@ -279,7 +279,7 @@ namespace Dungeon.Models
             roomIdParameter.ParameterName = "@RoomId";
             roomIdParameter.Value = roomId;
 
-            cmd.Parameters.Add(roomIdParameter);  
+            cmd.Parameters.Add(roomIdParameter);
 
             MySqlParameter itemIdParameter = new MySqlParameter();
             itemIdParameter.ParameterName = "@ItemId";
@@ -340,6 +340,47 @@ namespace Dungeon.Models
             {
                 conn.Dispose();
             }
+        }
+
+        public List<string> Examine()
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"SELECT * FROM items WHERE id = @ItemId;";
+            MySqlParameter pcIdParameter = new MySqlParameter();
+            pcIdParameter.ParameterName = "@ItemId";
+            pcIdParameter.Value = _id;
+            cmd.Parameters.Add(pcIdParameter);
+
+            MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+            List<string> examineList = new List<string>{};
+
+            // Item examineList = Item.Find(itemId);
+
+            while(rdr.Read())
+            {
+              int itemId = rdr.GetInt32(0);
+              string itemName = rdr.GetString(1);
+              string itemType = rdr.GetString(2);
+              string itemSpecial = rdr.GetString(3);
+              bool itemMagic = rdr.GetBoolean(4);
+              // Item newItem = Item.Find(itemId);
+              // items.Add(newItem);
+
+              examineList.Add(itemId.ToString());
+              examineList.Add(itemName);
+              examineList.Add(itemType);
+              examineList.Add(itemSpecial);
+              examineList.Add(itemMagic.ToString());
+
+            }
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+        return examineList;
         }
     }
 }

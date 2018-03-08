@@ -1,0 +1,16 @@
+@{
+  Layout = "_Layout";
+}
+<div class = "container well-gametop text-center">
+<h1>Examine</h1>
+
+@foreach(var item in @Model)
+{
+    <h4>Name: <a href="/game/examine/item/@item.GetId()">@item.GetName()</a></h4>
+    <!-- <h4>Type: <a href="/game/examine/">@item.GetItemType()</a></h4>
+    <h4>Special: <a href= "/game/examine/">@item.GetSpecial()</a></h4>
+    <h4>Magic: <a href="/game/examine/">@item.GetMagic()</a></h4> -->
+}
+
+<a href="/game">Back</a>
+</div>

@@ -75,6 +75,19 @@ namespace Dungeon.Tests
 
     }
 
+    [TestMethod]
+    public void Examine_examineslist()
+    {
+      //Arrange
+      Item testItem = new Item(1, "man", "strong", "strong", false);
+      testItem.Save();
 
+      //Act
+      List<Item> result = Item.GetAll();
+      List<Item> testItem = new List <Item>{testItem};
+
+      //Assert
+      CollectionAssert.AreEqual(testItem, result);
+    }
   }
 }
