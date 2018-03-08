@@ -1,0 +1,13 @@
+@{
+  Layout = "_Layout";
+}
+<div class = "container well-gametop text-center">
+<h1>Examine @Model.GetName()</h1>
+
+
+    <h4>Type: @Model.GetItemType()</h4>
+    <h4>Special: @Model.GetSpecial()</h4>
+    <h4>Magic: @Model.GetMagic()</h4>
+  
+<a href="/game">Back</a>
+</div>
