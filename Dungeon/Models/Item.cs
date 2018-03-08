@@ -236,17 +236,20 @@ namespace Dungeon.Models
             Console.WriteLine("In Item.cs AddToContents has a room Id of " + roomId);
             MySqlCommand cmd = new MySqlCommand(@"INSERT INTO contents (rooms, items) VALUES (@RoomId, @ItemId);", conn);
 
-            MySqlParameter itemIdParameter = new MySqlParameter();
-            itemIdParameter.ParameterName = "@ItemId";
-            itemIdParameter.Value = _id;
-
             MySqlParameter roomIdParameter = new MySqlParameter();
             roomIdParameter.ParameterName = "@RoomId";
             roomIdParameter.Value = roomId;
 
-            Console.WriteLine("@ItemId is: " + _id + " and roomId is: " + roomId);
+            cmd.Parameters.Add(roomIdParameter);
+
+            MySqlParameter itemIdParameter = new MySqlParameter();
+            itemIdParameter.ParameterName = "@ItemId";
+            itemIdParameter.Value = _id;
 
             cmd.Parameters.Add(itemIdParameter);
+
+            Console.WriteLine("@ItemId is: " + _id + " and roomId is: " + roomId);
+
 
             try
             {
@@ -264,6 +267,46 @@ namespace Dungeon.Models
             }
 
         }
+
+        public void RemoveFromContents(int roomId)
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            Console.WriteLine("In Item.cs RemoveFromContents has a room Id of " + roomId);
+            MySqlCommand cmd = new MySqlCommand(@"DELETE FROM contents (rooms, items) VALUES (@RoomId, @ItemId);", conn);
+
+            MySqlParameter roomIdParameter = new MySqlParameter();
+            roomIdParameter.ParameterName = "@RoomId";
+            roomIdParameter.Value = roomId;
+
+            cmd.Parameters.Add(roomIdParameter);
+
+            MySqlParameter itemIdParameter = new MySqlParameter();
+            itemIdParameter.ParameterName = "@ItemId";
+            itemIdParameter.Value = _id;
+
+            cmd.Parameters.Add(itemIdParameter);
+
+            Console.WriteLine("@ItemId is: " + _id + " and roomId is: " + roomId);
+
+
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            catch(Exception ex)
+            {
+               Console.WriteLine("Exception in AddToContents is: " + ex + " and roomId is: " + roomId);
+            }
+
+
+            if (conn != null)
+            {
+                conn.Close();
+            }
+
+        }
+
 
         public void Delete()
         {
@@ -299,42 +342,45 @@ namespace Dungeon.Models
             }
         }
 
-        public List<Item> GetExamine()
+        public List<string> Examine()
         {
             MySqlConnection conn = DB.Connection();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = @"SELECT * FROM examine WHERE id = @itemId;";
+            cmd.CommandText = @"SELECT * FROM items WHERE id = @ItemId;";
             MySqlParameter pcIdParameter = new MySqlParameter();
-            pcIdParameter.ParameterName = "@itemId";
+            pcIdParameter.ParameterName = "@ItemId";
             pcIdParameter.Value = _id;
             cmd.Parameters.Add(pcIdParameter);
 
             MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
-            List<Item> items = new List<Item>{};
+            List<string> examineList = new List<string>{};
+
+            // Item examineList = Item.Find(itemId);
 
             while(rdr.Read())
             {
               int itemId = rdr.GetInt32(0);
-              // int pcId = rdr.GetInt32(1);
-
-              // string itemName = rdr.GetString(1);
-              // string itemType = rdr.GetString(2);
-              // string itemSpecial = rdr.GetString(3);
-              // bool itemMagic = rdr.GetBoolean(4);
+              string itemName = rdr.GetString(1);
+              string itemType = rdr.GetString(2);
+              string itemSpecial = rdr.GetString(3);
+              bool itemMagic = rdr.GetBoolean(4);
               // Item newItem = Item.Find(itemId);
               // items.Add(newItem);
-              Item newItem = Item.Find(itemId);
-              items.Add(newItem);
-              Console.WriteLine("item is: "  + newItem.GetName());
+
+              examineList.Add(itemId.ToString());
+              examineList.Add(itemName);
+              examineList.Add(itemType);
+              examineList.Add(itemSpecial);
+              examineList.Add(itemMagic.ToString());
+
             }
             conn.Close();
             if (conn != null)
             {
                 conn.Dispose();
             }
-        return items;
+        return examineList;
         }
-
     }
 }

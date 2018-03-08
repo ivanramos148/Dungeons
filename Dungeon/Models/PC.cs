@@ -379,10 +379,13 @@ namespace Dungeon.Models
 
         public List<Item> GetInventory()
         {
+          Console.WriteLine("Got Into PC-GetInventory and the id is: "  + _id);
+
             MySqlConnection conn = DB.Connection();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = @"SELECT * FROM inventory WHERE id = @PCId;";
+            cmd.CommandText = @"SELECT * FROM inventory WHERE pcs = @PCId;";
+
             MySqlParameter pcIdParameter = new MySqlParameter();
             pcIdParameter.ParameterName = "@PCId";
             pcIdParameter.Value = _id;
@@ -393,8 +396,8 @@ namespace Dungeon.Models
 
             while(rdr.Read())
             {
-              int itemId = rdr.GetInt32(0);
-              int pcId = rdr.GetInt32(1);
+              int itemId = rdr.GetInt32(1);
+              int pcId = rdr.GetInt32(2);
 
               // string itemName = rdr.GetString(1);
               // string itemType = rdr.GetString(2);
