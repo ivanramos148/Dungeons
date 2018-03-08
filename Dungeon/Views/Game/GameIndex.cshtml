@@ -64,6 +64,7 @@
               <!-- if you have items in your inventory, you can do Examine -->
               <li><a href="/game/select/@Model["room"].GetId()">Get</a></li>
               <!-- if in the map (int[] x = temp[@Model["room"].GetMapId()];) if (int[11] !=0) then you can Search -->
+              @if(@Model["npc"].Count > 0){<li><a href="/game/combat/@Model["room"].GetId()">Fight</a></li>}
         </ul>
 
 
