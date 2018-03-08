@@ -31,7 +31,7 @@ namespace Dungeon.Controllers
 
           myMap = Game.GetMap();
           myGame.Add("map", myMap);
-
+          myGame.Add("AllRooms", Room.GetAll());
           Console.WriteLine("Room inside /game is: " + Room.Find(newPC.GetRoomId()).GetName());
 
           return View("GameIndex", myGame);
