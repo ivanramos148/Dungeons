@@ -6,10 +6,6 @@ using Dungeon.Models;
 
 namespace Dungeon.Controllers
 {
-
-
-
-
     public class GameController : Controller
     {
         [HttpGet("/game")]
@@ -308,9 +304,58 @@ namespace Dungeon.Controllers
 
       myGame.Add("command", Room.Find(newPC.GetRoomId()).GetCommands());
 
+      hamza-feature-branch
       myMap = Game.GetMap();
       myGame.Add("map", myMap);
       return View("Fight", myGame);
     }
-}
+
+          // [HttpGet("/game/examine/{roomId}")]
+          // public ActionResult Examine(int ItemId)
+          // {
+          //   Console.WriteLine("Inside /game/examine/{roomId}");
+          //   PC newPC = PC.Find(2);
+          //   newPC.SetRoomId(ItemId);
+          //   Dictionary<int, int[]> myMap = new Dictionary<int, int[]>{};
+          //   Dictionary<string, object> myGame = new Dictionary<string, object>{{"room", Room.Find(newPC.GetRoomId()) }};
+          //   //           Dictionary<string, object> myGame = new Dictionary<string, object>{"room", Room.Find(PC.GetRoomId()) };
+          //   myGame.Add("pc", PC.Find(newPC.GetId()));
+          //   myGame.Add("npc", Game.GetAllNPCs(newPC.GetRoomId()));
+          //   myGame.Add("item", Game.GetAllItems(newPC.GetRoomId()));
+          //
+          //   myGame.Add("command", Room.Find(newPC.GetRoomId()).GetCommands());
+          //
+          //   myMap = Game.GetMap();
+          //   myGame.Add("map", myMap);
+          //
+          //   Console.WriteLine("Room inside Look is: " + Room.Find(newPC.GetRoomId()).GetName());
+          //   Console.WriteLine("in Look PC thinks its room # is: " + newPC.GetRoomId());
+          //
+          //   return View("Examine", myGame);
+          // }
+
+          [HttpGet("/game/examine/{PCId}")]
+          public ActionResult ExamineMe(int PCId)
+          {
+            Console.WriteLine("Inside /game/examine/{PCId}");
+              List<Item> tempItems = new List<Item>{};
+              tempItems = PC.Find(PCId).GetInventory();
+              // For through the items tempItem.GetName();
+              // offer each item with a link to the Examine command
+              // if they click on the link, show a screen displaying the info from Examine
+              return View("Examine", tempItems);
+          }
+
+          [HttpGet("/game/examine/item/{itemId}")]
+          public ActionResult ExamineItem(int itemId)
+          {
+              Item tempItem = Item.Find(itemId);
+              // For through the items tempItem.GetName();
+              // offer each item with a link to the Examine command
+              // if they click on the link, show a screen displaying the info from Examine
+              return View("ExamineDetails", tempItem);
+          }
+
+  }
+
 }

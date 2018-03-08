@@ -63,15 +63,32 @@
               <li><a href="/game/inventory/@Model["pc"].GetId()">Inventory</a></li>
               <!-- if you have items in your inventory, you can do Examine -->
               <li><a href="/game/select/@Model["room"].GetId()">Get</a></li>
+              @if(@Model["pc"].GetInventory().Count >0)
+              {
+                  <li><a href="/game/examine/@Model["pc"].GetId()">Examine</a></li>
+                  Console.WriteLine("GetInventory works");
+              }
               <!-- if in the map (int[] x = temp[@Model["room"].GetMapId()];) if (int[11] !=0) then you can Search -->
               @if(@Model["npc"].Count > 0){<li><a href="/game/combat/@Model["room"].GetId()">Fight</a></li>}
         </ul>
 
 
+<<<<<<< HEAD
     }
     else
     {
       <h2>It is too dark to go there!</h2>
     }
 
+=======
+            if (x[exit] !=0)
+            {
+                <a href="/game/room/@x[exit]">@exits[exit]</a>
+            }
+          }
+        }
+      } else {
+          <h2>It's too dark to see!</h2>
+      }
+>>>>>>> dalia
 </div>

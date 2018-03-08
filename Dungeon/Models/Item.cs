@@ -269,7 +269,17 @@ namespace Dungeon.Models
 
         }
 
-        // public void RemoveFromContents(int roomId)
+
+//     public void RemoveFromContents(int roomId)
+//     {
+//       MySqlConnection conn = DB.Connection();
+//       conn.Open();
+//       Console.WriteLine("In Item.cs AddToContents has a room Id of " + roomId);
+//   //  MySqlCommand cmd = new MySqlCommand(@"DELETE FROM contents (rooms, items) VALUES (@RoomId, @ItemId);", conn);
+//       MySqlCommand cmd = new MySqlCommand(@"DELETE FROM contents WHERE items = @ItemId;", conn);
+
+  
+     // public void RemoveFromContents(int roomId)
         // {
         //     MySqlConnection conn = DB.Connection();
         //     conn.Open();
@@ -285,65 +295,71 @@ namespace Dungeon.Models
         //     MySqlParameter itemIdParameter = new MySqlParameter();
         //     itemIdParameter.ParameterName = "@ItemId";
         //     itemIdParameter.Value = _id;
-        //
-        //     cmd.Parameters.Add(itemIdParameter);
-        //
-        //     Console.WriteLine("@ItemId is: " + _id + " and roomId is: " + roomId);
-        //
-        //
-        //     try
-        //     {
-        //         cmd.ExecuteNonQuery();
-        //     }
-        //     catch(Exception ex)
-        //     {
-        //        Console.WriteLine("Exception in AddToContents is: " + ex + " and roomId is: " + roomId);
-        //     }
-        //
-        //
-        //     if (conn != null)
-        //     {
-        //         conn.Close();
-        //     }
-        //
-        // }
+  
+//       MySqlParameter itemIdParameter = new MySqlParameter();
+//       itemIdParameter.ParameterName = "@ItemId";
+//       itemIdParameter.Value = _id;
+
+//       MySqlParameter roomIdParameter = new MySqlParameter();
+//       roomIdParameter.ParameterName = "@RoomId";
+//       roomIdParameter.Value = roomId;
+
+//       Console.WriteLine("@ItemId is: " + _id + " and roomId is: " + roomId);
+
+//       cmd.Parameters.Add(itemIdParameter);
+
+//       try
+//       {
+//           cmd.ExecuteNonQuery();
+//       }
+//       catch(Exception ex)
+//       {
+//          Console.WriteLine("Exception in AddToContents is: " + ex + " and roomId is: " + roomId);
+//       }
+//       if (conn != null)
+//       {
+//           conn.Close();
+//       }
+//     }
+
+        public void RemoveFromContents(int roomId)
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            Console.WriteLine("In Item.cs RemoveFromContents has a room Id of " + roomId);
+            MySqlCommand cmd = new MySqlCommand(@"DELETE FROM contents (rooms, items) VALUES (@RoomId, @ItemId);", conn);
+
+            MySqlParameter roomIdParameter = new MySqlParameter();
+            roomIdParameter.ParameterName = "@RoomId";
+            roomIdParameter.Value = roomId;
+
+            cmd.Parameters.Add(roomIdParameter);
+
+            MySqlParameter itemIdParameter = new MySqlParameter();
+            itemIdParameter.ParameterName = "@ItemId";
+            itemIdParameter.Value = _id;
+
+            cmd.Parameters.Add(itemIdParameter);
+
+            Console.WriteLine("@ItemId is: " + _id + " and roomId is: " + roomId);
 
 
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            catch(Exception ex)
+            {
+               Console.WriteLine("Exception in AddToContents is: " + ex + " and roomId is: " + roomId);
+            }
 
-    // }
 
-    public void RemoveFromContents(int roomId)
-    {
-      MySqlConnection conn = DB.Connection();
-      conn.Open();
-      Console.WriteLine("In Item.cs AddToContents has a room Id of " + roomId);
-      MySqlCommand cmd = new MySqlCommand(@"DELETE FROM contents WHERE items = @ItemId;", conn);
+            if (conn != null)
+            {
+                conn.Close();
+            }
 
-      MySqlParameter itemIdParameter = new MySqlParameter();
-      itemIdParameter.ParameterName = "@ItemId";
-      itemIdParameter.Value = _id;
-
-      MySqlParameter roomIdParameter = new MySqlParameter();
-      roomIdParameter.ParameterName = "@RoomId";
-      roomIdParameter.Value = roomId;
-
-      Console.WriteLine("@ItemId is: " + _id + " and roomId is: " + roomId);
-
-      cmd.Parameters.Add(itemIdParameter);
-
-      try
-      {
-          cmd.ExecuteNonQuery();
-      }
-      catch(Exception ex)
-      {
-         Console.WriteLine("Exception in AddToContents is: " + ex + " and roomId is: " + roomId);
-      }
-      if (conn != null)
-      {
-          conn.Close();
-      }
-    }
+        }
 
     public void Delete()
     {
@@ -365,18 +381,62 @@ namespace Dungeon.Models
       }
     }
 
-    public static void DeleteAll()
-    {
-      MySqlConnection conn = DB.Connection();
-      conn.Open();
-      var cmd = conn.CreateCommand() as MySqlCommand;
-      cmd.CommandText = @"DELETE FROM items; DELETE FROM contents";
-      cmd.ExecuteNonQuery();
-      conn.Close();
-      if (conn != null)
-      {
-          conn.Dispose();
-      }
+
+        public static void DeleteAll()
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            var cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"DELETE FROM items; DELETE FROM contents";
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+        }
+
+        public List<string> Examine()
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"SELECT * FROM items WHERE id = @ItemId;";
+            MySqlParameter pcIdParameter = new MySqlParameter();
+            pcIdParameter.ParameterName = "@ItemId";
+            pcIdParameter.Value = _id;
+            cmd.Parameters.Add(pcIdParameter);
+
+            MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+            List<string> examineList = new List<string>{};
+
+            // Item examineList = Item.Find(itemId);
+
+            while(rdr.Read())
+            {
+              int itemId = rdr.GetInt32(0);
+              string itemName = rdr.GetString(1);
+              string itemType = rdr.GetString(2);
+              string itemSpecial = rdr.GetString(3);
+              bool itemMagic = rdr.GetBoolean(4);
+              // Item newItem = Item.Find(itemId);
+              // items.Add(newItem);
+
+              examineList.Add(itemId.ToString());
+              examineList.Add(itemName);
+              examineList.Add(itemType);
+              examineList.Add(itemSpecial);
+              examineList.Add(itemMagic.ToString());
+
+            }
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+        return examineList;
+        }
+
     }
   }
 }
