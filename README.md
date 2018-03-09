@@ -2,11 +2,12 @@
 
 #### By Andy Grossberg and Michael Albers
 
-##Contributors
+## Contributors
  * Andy Grossberg
  * Hamza Naeem
  * Dalia Ramos
  * Ivan Ramos
+ 
 
 ## Description
 A Dungeon Crawling setup program using MySQL and many to many relationships.
