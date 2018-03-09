@@ -290,6 +290,9 @@ namespace Dungeon.Controllers
       return View("Select", myGame);
     }
 
+
+
+
     [HttpGet("/game/combat/{roomId}")]
     public ActionResult Combat(int roomId)
     {
@@ -303,11 +306,159 @@ namespace Dungeon.Controllers
       myGame.Add("item", Game.GetAllItems(newPC.GetRoomId()));
 
       myGame.Add("command", Room.Find(newPC.GetRoomId()).GetCommands());
-
-      hamza-feature-branch
       myMap = Game.GetMap();
       myGame.Add("map", myMap);
+      string[] message = new string[] {"","","","", "", ""};
+      myGame.Add("message", message);
+
+
       return View("Fight", myGame);
+    }
+
+    [HttpGet("/game/combat/attack/{roomId}")]
+    public ActionResult CombatAttack(int roomId)
+    {
+      string newView = "Fight";
+      PC newPC = PC.Find(2);
+      newPC.SetRoomId(roomId);
+      Dictionary<int, int[]> myMap = new Dictionary<int, int[]>{};
+      Dictionary<string, object> myGame = new Dictionary<string, object>{{"room", Room.Find(newPC.GetRoomId()) }};
+      //           Dictionary<string, object> myGame = new Dictionary<string, object>{"room", Room.Find(PC.GetRoomId()) };
+      myGame.Add("pc", PC.Find(newPC.GetId()));
+      myGame.Add("npc", Game.GetAllNPCs(newPC.GetRoomId()));
+      myGame.Add("item", Game.GetAllItems(newPC.GetRoomId()));
+
+      myGame.Add("command", Room.Find(newPC.GetRoomId()).GetCommands());
+
+      myMap = Game.GetMap();
+      myGame.Add("map", myMap);
+      int[] THAC0 = new int[] {20, 20, 18, 18, 16, 16, 14, 14, 12, 12, 10, 10, 8, 8, 6, 6};
+      int tempPCHP = newPC.GetHP();
+      NPC tempNPC = Game.GetAllNPCs(newPC.GetRoomId())[0];
+      int tempNPCHP = tempNPC.GetHP();
+      int tempPCAC = newPC.GetAC();
+      int tempNPCAC = tempNPC.GetAC();
+      int tempPCDam = newPC.GetDamage();
+      int tempNPCDam = tempNPC.GetDamage();
+      bool youHit = false;
+      bool itHits = false;
+      int PCDamage = 0;
+      int NPCDamage = 0;
+      int yourRoll = Game.GetRandomNumber(1,20);
+      if(yourRoll > 20 - tempNPC.GetAC())
+      {
+        youHit = true;
+        PCDamage = Game.GetRandomNumber(1, tempPCDam);
+        tempNPCHP = tempNPCHP - PCDamage;
+        Console.WriteLine("PCDamage = " + PCDamage);
+        Console.WriteLine("tempNPCHP = " + tempNPCHP);
+        tempNPC.SetHP(tempNPCHP);
+      }
+      int itsRoll = Game.GetRandomNumber(1,20);
+      if(itsRoll > 20 - newPC.GetAC())
+      {
+        itHits = true;
+        NPCDamage = Game.GetRandomNumber(1, tempNPCDam);
+        tempPCHP = tempPCHP - NPCDamage;
+        Console.WriteLine("NPCDamage = " + NPCDamage);
+        Console.WriteLine("newPCHP = " + tempPCHP);
+        newPC.SetHP(tempPCHP);
+      }
+      string[] message = new string[] {"","","","", "", ""};
+
+      newPC.Update(newPC.GetName(), newPC.GetPCType(), tempPCHP, 6, newPC.GetDamage(), newPC.GetLVL(), newPC.GetEXP(), newPC.GetRoomId());
+      tempNPC.Update(tempNPC.GetName(), tempNPC.GetNPCType(), tempNPCHP, 10, tempNPC.GetDamage(), tempNPC.GetLVL(), tempNPC.GetRoomId());
+
+      if (tempPCHP <=0)
+      {
+        newView="PCDiedInBattle";
+      }
+      else if (tempNPCHP <=0)
+      {
+        newView="NPCDiedInBattle";
+        tempNPC.SetRoomId(0);
+        tempNPC.Update(tempNPC.GetName(), tempNPC.GetNPCType(), tempNPCHP, tempNPC.GetAC(), tempNPC.GetDamage(), tempNPC.GetLVL(), -1);
+
+      }
+      else
+      {
+          message[0] = "You attack the " + tempNPC.GetName() + "\n";
+          if (youHit) { message[1] = "You do " + PCDamage + " points of damage!!" + "\n"; } else { message[1] = "You miss it!"; }
+          message[2] = "The " + tempNPC.GetName() + " attacks you back.\n";
+          if (itHits) { message[3] = "It does " + NPCDamage + " points of damage to you!\n"; } else { message[3] = "It misses you!"; }
+      }
+      message[4]="You have " + tempPCHP + " Health Points.";
+      message[5]="The " + tempNPC.GetName() + " has " + tempNPCHP + " Health Points.";
+
+
+
+
+      // newPC.Update(newPC.GetName(), newPC.GetPCType(), tempPCHP, newPC.GetAC(), newPC.GetDamage(), newPC.GetLVL(), newPC.GetEXP(), newPC.GetRoomId());
+      // tempNPC.Update(tempNPC.GetName(), tempNPC.GetNPCType(), tempNPCHP, tempNPC.GetAC(), tempNPC.GetDamage(), tempNPC.GetLVL(), tempNPC.GetRoomId());
+
+      // int NPCThac0 = 20 - tempNPC.GetLVL();
+      // int PCThac0 = THAC0[newPC.GetLVL()];
+      // Console.WriteLine("PCThac0 = " + PCThac0);
+      //
+      // // Random rnd = new Random();
+      // // int month = rnd.Next(1, 13); // creates a number between 1 and 12
+      // // int dice = rnd.Next(1, 7);
+      // int PCDamage = Game.GetRandomNumber(1,tempPCDam);
+      // int NPCDamage = Game.GetRandomNumber(1,tempNPCDam);
+      // int PCRoll = Game.GetRandomNumber(1,20);
+      // Console.WriteLine("PCRoll = " + PCRoll);
+      // int NPCRoll = Game.GetRandomNumber(1,20);
+      // Console.WriteLine("NPCRoll = " + NPCRoll);
+      //
+      //
+      // if (NPCRoll >= NPCThac0-newPC.GetAC() )
+      // {
+      //   tempPCHP = tempPCHP - NPCDamage;
+      // };
+      // if (PCRoll >= PCThac0-tempNPC.GetAC() )
+      // {
+      //   tempNPCHP = tempNPCHP - PCDamage;
+      // };
+      //
+      // // newPC.SetHP(tempPCHP);
+      // // tempNPC.SetHP(tempNPCHP);
+      // newPC.Update(newPC.GetName(), newPC.GetPCType(), tempPCHP, newPC.GetAC(), newPC.GetDamage(), newPC.GetLVL(), newPC.GetEXP(), newPC.GetRoomId());
+      // tempNPC.Update(tempNPC.GetName(), tempNPC.GetNPCType(), tempNPCHP, tempNPC.GetAC(), tempNPC.GetDamage(), tempNPC.GetLVL(), tempNPC.GetRoomId());
+      //
+      // string[] message = new string[] {"","","",""};
+      // message[0] = "You attack the " + tempNPC.GetName() + "\n";
+      // if (PCRoll >= PCThac0-tempNPC.GetAC() ) { message[1] = "You do " + PCDamage + " points of damage!!" + "\n"; } else { message[1] = "You miss it!"; }
+      // message[2] = "The " + tempNPC.GetName() + " attacks you back.\n";
+      // if (NPCRoll >= NPCThac0-newPC.GetAC() ) { message[3] = "It does " + NPCDamage + " points of damage to you!\n"; } else { message[3] = "It misses you!"; }
+
+      //
+      // THAC0 - (roll on a d20) = AC Hit.
+      myGame["message"] = message;
+      // return View("Fight", myGame);
+      return View(newView, myGame);
+
+    }
+
+
+    [HttpGet("/game/combat/flee/{roomId}")]
+    public ActionResult Flee(int roomId)
+    {
+      PC newPC = PC.Find(2);
+      newPC.SetRoomId(roomId);
+      Dictionary<int, int[]> myMap = new Dictionary<int, int[]>{};
+      Dictionary<string, object> myGame = new Dictionary<string, object>{{"room", Room.Find(newPC.GetRoomId()) }};
+      //           Dictionary<string, object> myGame = new Dictionary<string, object>{"room", Room.Find(PC.GetRoomId()) };
+      myGame.Add("pc", PC.Find(newPC.GetId()));
+      myGame.Add("npc", Game.GetAllNPCs(newPC.GetRoomId()));
+      myGame.Add("item", Game.GetAllItems(newPC.GetRoomId()));
+
+      myGame.Add("command", Room.Find(newPC.GetRoomId()).GetCommands());
+
+      myMap = Game.GetMap();
+      myGame.Add("map", myMap);
+
+
+      return View("Dead");
     }
 
           // [HttpGet("/game/examine/{roomId}")]
@@ -333,6 +484,43 @@ namespace Dungeon.Controllers
           //
           //   return View("Examine", myGame);
           // }
+
+          [HttpGet("/drop/item/{itemId}")]
+          public ActionResult Drop(int itemId)
+          {
+            Console.WriteLine("Inside /drop/item/{itemId} with Item " + Item.Find(itemId).GetName());
+              // List<Item> tempItems = new List<Item>{};
+              // tempItems = PC.Find(PCId).GetInventory();
+              PC newPC = PC.Find(2);
+              //
+              List<Item> newItem = newPC.GetItems(); // passing stuff
+
+              // Item.RemoveItemFromPC(itemId); // Taking Item from Inventory
+//or
+              newPC.DropItemFromPC(itemId);
+
+              Item.Find(itemId).AddToContents(newPC.GetRoomId()); // Dropping Item into Room.
+
+              // Item tempItem = Item.Find(itemId);
+              // newPC.AddItemToPC(Item.Find(itemId));
+              // tempItem.RemoveFromContents(itemId);
+
+              // newPC.SetRoomId(pcId);
+              Dictionary<int, int[]> myMap = new Dictionary<int, int[]>{};
+              Dictionary<string, object> myGame = new Dictionary<string, object>{{"room", Room.Find(newPC.GetRoomId()) }};
+              //           Dictionary<string, object> myGame = new Dictionary<string, object>{"room", Room.Find(PC.GetRoomId()) };
+              myGame.Add("pc", PC.Find(newPC.GetId()));
+              myGame.Add("npc", Game.GetAllNPCs(newPC.GetRoomId()));
+              myGame.Add("item", Game.GetAllItems(newPC.GetRoomId()));
+              myGame.Add("command", Room.Find(newPC.GetRoomId()).GetCommands());
+              myMap = Game.GetMap();
+              myGame.Add("map", myMap);
+              myGame.Add("stuff", newItem);
+
+              return View("GameIndex", myGame);
+          }
+
+
 
           [HttpGet("/game/examine/{PCId}")]
           public ActionResult ExamineMe(int PCId)

@@ -64,6 +64,11 @@ namespace Dungeon.Models
             return _hp;
         }
 
+        public void SetHP(int hp)
+        {
+            _hp = hp;
+        }
+
         public int GetAC()
         {
             return _ac;
@@ -82,6 +87,11 @@ namespace Dungeon.Models
         public int GetRoomId()
         {
             return _roomId;
+        }
+
+        public void SetRoomId(int id)
+        {
+            _roomId = 0;
         }
 
         public int GetId()

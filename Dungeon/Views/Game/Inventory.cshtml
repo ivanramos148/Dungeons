@@ -7,7 +7,7 @@
 {
   @foreach(var item in @Model["stuff"])
   {
-    <h3>@item.GetName()</h3>
+    <h3>@item.GetName() | <a href="/drop/item/@item.GetId()">DROP</a></h3> 
   }
 }
 else
@@ -17,3 +17,12 @@ else
 
 <a href="/game">Back</a>
 </div>
+<!--
+<form action="" method="post">
+<p><label for="text1">First Number:</label><br>
+<input type="text" name="text1"></p>
+<p><label for="text2">Second Number:</label><br>
+<input type="text" name="text2"></p>
+<p><input type="submit" value=" Add "></p>
+</form>
+-->

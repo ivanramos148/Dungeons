@@ -1,20 +1,25 @@
 
 @{
-  Layout = null;
+  Layout = "_Layout";
 }
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Dungeon Editor</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <!-- <script src="js/scripts.js"></script> -->
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="~/css/styles.css">
-  </head>
-  <body>
 
-  </body>
-</html>
+    <div class="container well-gametop text-center">
+      <h1>COMBAT!</h2>
+        <div>
+          @if(@Model["message"][0] !="" )
+          {
+            @for (var i = 0; i < @Model["message"].Length; i++)
+            {
+              @Model["message"][i]<br>
+            }
+          }
+          <p>
+              <ul>
+              <li><a href="/game/combat/attack/@Model["room"].GetId()/">ATTACK</a></li>
+
+              <li><a href="/game/combat/flee/@Model["room"].GetId()">FLEE</a></li>
+              </ul>
+              </p>
+        </div>
+        <a href="/game">Back</a>
+    </div>

@@ -66,6 +66,11 @@ namespace Dungeon.Models
         return _hp;
     }
 
+    public void SetHP(int hp)
+    {
+        _hp = hp;
+    }
+
     public int GetAC()
     {
         return _ac;
@@ -320,6 +325,7 @@ namespace Dungeon.Models
         MySqlConnection conn = DB.Connection();
         conn.Open();
         var cmd = conn.CreateCommand() as MySqlCommand;
+        // cmd.CommandText = @"INSERT INTO inventory (items, pcs ) VALUES (@ItemId, @PCId) LIMIT 1;";
         cmd.CommandText = @"INSERT INTO inventory (items, pcs ) VALUES (@ItemId, @PCId);";
 
         MySqlParameter items = new MySqlParameter();
@@ -333,6 +339,33 @@ namespace Dungeon.Models
         cmd.Parameters.Add(pcs);
 
 
+
+        cmd.ExecuteNonQuery();
+        conn.Close();
+        if (conn != null)
+        {
+            conn.Dispose();
+        }
+    }
+
+    public void DropItemFromPC(int newItem)
+    {
+        MySqlConnection conn = DB.Connection();
+        conn.Open();
+        var cmd = conn.CreateCommand() as MySqlCommand;
+        cmd.CommandText = @"DELETE FROM inventory WHERE items = @ItemId LIMIT 1;"; // where ID is the first occurrence of the condition
+
+        MySqlParameter items = new MySqlParameter();
+        items.ParameterName = "@ItemId";
+        items.Value = newItem ;
+        cmd.Parameters.Add(items);
+        //
+        // MySqlParameter pcs = new MySqlParameter();
+        // pcs.ParameterName = "@PCId";
+        // pcs.Value = _id;
+        // cmd.Parameters.Add(pcs);
+        //
+        //
 
         cmd.ExecuteNonQuery();
         conn.Close();
@@ -414,7 +447,7 @@ namespace Dungeon.Models
 // <<<<<<< hamza-feature-branch
 //             conn.Dispose();
 // =======
-          Console.WriteLine("Got Into PC-GetInventory and the id is: "  + _id);
+          // Console.WriteLine("Got Into PC-GetInventory and the id is: "  + _id);
 
             MySqlConnection conn = DB.Connection();
             conn.Open();
@@ -454,6 +487,9 @@ namespace Dungeon.Models
 //         }
 //         return items;
       }
+
+
+
 
         public bool HasLight()
         {
